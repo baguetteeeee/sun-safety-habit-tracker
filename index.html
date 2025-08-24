@@ -3,164 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habit Tracker with Badges</title>
+  <title>Habit Tracker</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      min-height: 100vh;
+      margin: 20px;
+      background: #f0f8ff;
     }
-
     .container {
       display: flex;
       gap: 30px;
-      padding: 20px;
-      width: 90%;
-      max-width: 1200px;
     }
-
-    .tasks, .tracker, .badges {
+    .tracker, .badges {
       background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .tasks {
-      flex: 1;
-    }
-
     .tracker {
-      flex: 2;
+      max-width: 400px;
+    }
+    h1 {
       text-align: center;
+      color: #2c3e50;
     }
-
-    .badges {
-      flex: 1;
-      text-align: center;
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-
     ul {
       list-style: none;
       padding: 0;
     }
-
     li {
       margin: 10px 0;
     }
-
-    button {
-      margin-top: 15px;
+    .btn {
+      display: block;
+      margin: 20px auto;
       padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background: #4CAF50;
+      background: #4caf50;
       color: white;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
     }
-
-    button:hover {
+    .btn:hover {
       background: #45a049;
     }
-
-    .badge {
+    #progress {
+      text-align: center;
       margin: 10px 0;
-      display: none;
+      font-weight: bold;
     }
-
-    .badge img {
-      max-width: 100px;
+    .earned-badges img {
+      max-width: 80px;
+      margin: 10px;
+    }
+    .badges h2 {
+      text-align: center;
+    }
+    .badge-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .badge-preview img {
+      max-width: 60px;
+      opacity: 0.4;
+      transition: opacity 0.3s;
+    }
+    .badge-preview img.unlocked {
+      opacity: 1;
+    }
+    .info {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Checklist -->
-    <div class="tasks">
-      <h2>Daily Tasks</h2>
-      <ul>
-        <li><input type="checkbox" id="task1"> Apply sunscreen</li>
-        <li><input type="checkbox" id="task2"> Wear a hat</li>
-        <li><input type="checkbox" id="task3"> Stay in the shade</li>
-        <li><input type="checkbox" id="task4"> Wear sun-protective clothing</li>
-        <li><input type="checkbox" id="task5"> Wear sunglasses</li>
-      </ul>
-    </div>
-
-    <!-- Tracker -->
+    <!-- Left Side: Habit Tracker -->
     <div class="tracker">
-      <h2>Habit Tracker</h2>
-      <p>Complete the tasks to the left, then press the button below to mark your day complete.<br>
-      Continue your streak to earn badges!</p>
-      <p>Current Streak: <span id="streak">0</span> days</p>
-      <button onclick="markComplete()">Mark Today as Complete</button>
+      <h1>Habit Tracker</h1>
+      <ul id="checklist">
+        <li><input type="checkbox"> Apply sunscreen</li>
+        <li><input type="checkbox"> Wear a hat</li>
+        <li><input type="checkbox"> Stay in the shade</li>
+        <li><input type="checkbox"> Wear sun protective clothing</li>
+        <li><input type="checkbox"> Wear sunglasses</li>
+      </ul>
+      <div class="info">
+        Complete the tasks above, then press the <b>"Mark Today as Complete"</b> button.<br>
+        Continue your streak to unlock new badges!
+      </div>
+      <button class="btn" onclick="markComplete()">Mark Today as Complete</button>
+      <div id="progress">Days Completed: 0</div>
+      <div class="earned-badges" id="earnedBadges"></div>
     </div>
 
-    <!-- Badge Preview -->
+    <!-- Right Side: Badge Preview -->
     <div class="badges">
-      <h2>Your Badges</h2>
-      <div class="badge" id="badge5">
-        <a href="https://freeimage.host/i/KJIQXZQ"><img src="https://iili.io/KJIQXZQ.md.png" alt="5 Days Badge"></a>
-      </div>
-      <div class="badge" id="badge10">
-        <a href="https://freeimage.host/i/KJIQjnV"><img src="https://iili.io/KJIQjnV.md.png" alt="10 Days Badge"></a>
-      </div>
-      <div class="badge" id="badge15">
-        <a href="https://freeimage.host/i/KJIQN6P"><img src="https://iili.io/KJIQN6P.md.png" alt="15 Days Badge"></a>
-      </div>
-      <div class="badge" id="badge20">
-        <a href="https://freeimage.host/i/KJIQwMB"><img src="https://iili.io/KJIQwMB.md.png" alt="20 Days Badge"></a>
-      </div>
-      <div class="badge" id="badge25">
-        <a href="https://freeimage.host/i/KJIQeF1"><img src="https://iili.io/KJIQeF1.md.png" alt="25 Days Badge"></a>
-      </div>
-      <div class="badge" id="badge30">
-        <a href="https://freeimage.host/i/KJIQkcF"><img src="https://iili.io/KJIQkcF.md.png" alt="30 Days Badge"></a>
+      <h2>Badge Preview</h2>
+      <div class="badge-preview" id="badgePreview">
+        <a href="https://freeimage.host/i/KJIQXZQ"><img src="https://iili.io/KJIQXZQ.md.png" alt="5-day badge"></a>
+        <a href="https://freeimage.host/i/KJIQjnV"><img src="https://iili.io/KJIQjnV.md.png" alt="10-day badge"></a>
+        <a href="https://freeimage.host/i/KJIQN6P"><img src="https://iili.io/KJIQN6P.md.png" alt="15-day badge"></a>
+        <a href="https://freeimage.host/i/KJIQwMB"><img src="https://iili.io/KJIQwMB.md.png" alt="20-day badge"></a>
+        <a href="https://freeimage.host/i/KJIQeF1"><img src="https://iili.io/KJIQeF1.md.png" alt="25-day badge"></a>
+        <a href="https://freeimage.host/i/KJIQkcF"><img src="https://iili.io/KJIQkcF.md.png" alt="30-day badge"></a>
       </div>
     </div>
   </div>
 
   <script>
-    let streak = 0;
-
-    function allTasksCompleted() {
-      for (let i = 1; i <= 5; i++) {
-        if (!document.getElementById("task" + i).checked) {
-          return false;
-        }
-      }
-      return true;
-    }
+    let daysCompleted = 0;
+    const milestones = [5, 10, 15, 20, 25, 30];
+    const badgeLinks = [
+      "https://iili.io/KJIQXZQ.md.png",
+      "https://iili.io/KJIQjnV.md.png",
+      "https://iili.io/KJIQN6P.md.png",
+      "https://iili.io/KJIQwMB.md.png",
+      "https://iili.io/KJIQeF1.md.png",
+      "https://iili.io/KJIQkcF.md.png"
+    ];
 
     function markComplete() {
-      if (!allTasksCompleted()) {
-        alert("Please complete all tasks before marking the day complete!");
+      const checkboxes = document.querySelectorAll("#checklist input[type='checkbox']");
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+      if (!allChecked) {
+        alert("Please complete all tasks before marking today as complete!");
         return;
       }
 
-      streak++;
-      document.getElementById("streak").innerText = streak;
+      daysCompleted++;
+      document.getElementById("progress").innerText = "Days Completed: " + daysCompleted;
 
-      if (streak === 5) document.getElementById("badge5").style.display = "block";
-      if (streak === 10) document.getElementById("badge10").style.display = "block";
-      if (streak === 15) document.getElementById("badge15").style.display = "block";
-      if (streak === 20) document.getElementById("badge20").style.display = "block";
-      if (streak === 25) document.getElementById("badge25").style.display = "block";
-      if (streak === 30) document.getElementById("badge30").style.display = "block";
+      // Reset checklist
+      checkboxes.forEach(cb => cb.checked = false);
 
-      // Reset checkboxes for the next day
-      for (let i = 1; i <= 5; i++) {
-        document.getElementById("task" + i).checked = false;
+      // Unlock badges
+      if (milestones.includes(daysCompleted)) {
+        const index = milestones.indexOf(daysCompleted);
+        const badgeImg = document.createElement("img");
+        badgeImg.src = badgeLinks[index];
+        document.getElementById("earnedBadges").appendChild(badgeImg);
+
+        // Update preview
+        document.querySelectorAll(".badge-preview img")[index].classList.add("unlocked");
       }
     }
   </script>
