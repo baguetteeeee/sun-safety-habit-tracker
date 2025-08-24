@@ -7,11 +7,53 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
       background: #f4f4f9;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
     }
+
+    /* Sidebar for badge preview */
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      padding: 20px;
+      border-right: 2px solid #ddd;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #444;
+    }
+    .preview-badge {
+      text-align: center;
+      margin-bottom: 15px;
+      opacity: 0.4; /* default locked look */
+    }
+    .preview-badge.unlocked {
+      opacity: 1;
+    }
+    .preview-badge img {
+      width: 70px;
+      height: 70px;
+      display: block;
+      margin: auto;
+    }
+    .preview-badge p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 20px;
+      text-align: center;
+    }
+
     h1 {
       color: #333;
     }
@@ -25,7 +67,11 @@
       cursor: pointer;
       border-radius: 8px;
     }
-    button:hover {
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
       background: #45a049;
     }
     .status {
@@ -48,17 +94,52 @@
       display: block;
       margin: auto;
     }
+    .checklist {
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .checklist label {
+      display: block;
+      margin: 8px 0;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <h1>🌱 Habit Tracker</h1>
-  <div class="status">
-    <p id="streak">🔥 Current streak: 0 days</p>
+  <!-- Sidebar badge preview -->
+  <div class="sidebar">
+    <h2>🎖 Badge Preview</h2>
+    <div id="previewContainer"></div>
   </div>
-  <button id="completeBtn">Mark Today Complete ✅</button>
-  <div class="badges">
-    <h2>🏅 Badges Earned</h2>
-    <div id="badgeContainer"></div>
+
+  <!-- Main tracker -->
+  <div class="main">
+    <h1>🌱 Habit Tracker</h1>
+    
+    <div class="status">
+      <p id="streak">🔥 Current streak: 0 days</p>
+    </div>
+
+    <div class="checklist">
+      <h2>☀️ Daily Sun-Safe Checklist</h2>
+      <label><input type="checkbox" class="task"> Apply sunscreen</label>
+      <label><input type="checkbox" class="task"> Wear a hat</label>
+      <label><input type="checkbox" class="task"> Stay in the shade</label>
+      <label><input type="checkbox" class="task"> Wear sun protective clothing</label>
+      <label><input type="checkbox" class="task"> Wear sunglasses</label>
+    </div>
+
+    <button id="completeBtn" disabled>Mark Today Complete ✅</button>
+
+    <div class="badges">
+      <h2>🏅 Badges Earned</h2>
+      <div id="badgeContainer"></div>
+    </div>
   </div>
 
   <script>
@@ -80,10 +161,14 @@
 
     const streakEl = document.getElementById("streak");
     const badgeContainer = document.getElementById("badgeContainer");
+    const previewContainer = document.getElementById("previewContainer");
     const completeBtn = document.getElementById("completeBtn");
+    const tasks = document.querySelectorAll(".task");
 
     function updateUI() {
       streakEl.textContent = `🔥 Current streak: ${progress.streak} days`;
+      
+      // Earned badges display
       badgeContainer.innerHTML = "";
       if (progress.badges.length === 0) {
         badgeContainer.innerHTML = "<p>No badges yet — keep going!</p>";
@@ -95,6 +180,23 @@
           badgeContainer.appendChild(div);
         });
       }
+
+      // Sidebar preview
+      previewContainer.innerHTML = "";
+      BADGE_MILESTONES.forEach(b => {
+        const div = document.createElement("div");
+        div.className = "preview-badge";
+        if (progress.badges.includes(b)) {
+          div.classList.add("unlocked");
+        }
+        div.innerHTML = `<img src="${BADGE_IMAGES[b]}" alt="${b}-day badge"><p>${b}-day ${progress.badges.includes(b) ? "" : "(Locked)"}</p>`;
+        previewContainer.appendChild(div);
+      });
+    }
+
+    function checkTasks() {
+      const allChecked = Array.from(tasks).every(task => task.checked);
+      completeBtn.disabled = !allChecked;
     }
 
     function markComplete() {
@@ -128,9 +230,15 @@
 
       localStorage.setItem("habitProgress", JSON.stringify(progress));
       updateUI();
+
+      // Reset checklist
+      tasks.forEach(task => task.checked = false);
+      checkTasks();
     }
 
     completeBtn.addEventListener("click", markComplete);
+    tasks.forEach(task => task.addEventListener("change", checkTasks));
+
     updateUI();
   </script>
 </body>
