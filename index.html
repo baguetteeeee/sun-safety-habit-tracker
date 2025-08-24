@@ -2,159 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Habit Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker with Badges</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      display: flex;
       margin: 0;
-      height: 100vh;
+      padding: 0;
+      background: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
-    .main {
-      flex: 3;
+
+    .container {
+      display: flex;
+      gap: 30px;
       padding: 20px;
+      width: 90%;
+      max-width: 1200px;
     }
-    .sidebar {
+
+    .tasks, .tracker, .badges {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .tasks {
       flex: 1;
-      background: #f4f4f4;
-      padding: 20px;
-      border-left: 2px solid #ccc;
-      overflow-y: auto;
     }
-    h1 {
-      color: #333;
+
+    .tracker {
+      flex: 2;
+      text-align: center;
     }
+
+    .badges {
+      flex: 1;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
     ul {
       list-style: none;
       padding: 0;
     }
+
     li {
       margin: 10px 0;
     }
+
     button {
       margin-top: 15px;
       padding: 10px 20px;
       font-size: 16px;
-      cursor: pointer;
-      background: #4CAF50;
-      color: white;
       border: none;
       border-radius: 5px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
     }
-    .badges {
-      margin-top: 20px;
+
+    button:hover {
+      background: #45a049;
     }
+
     .badge {
       margin: 10px 0;
+      display: none;
     }
+
     .badge img {
       max-width: 100px;
-      display: block;
-    }
-    .instructions {
-      background: #e8f4ff;
-      padding: 15px;
-      border: 1px solid #b3daff;
-      border-radius: 8px;
-      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="main">
-    <h1>☀️ Sun Safety Habit Tracker</h1>
-    <div class="instructions">
-      ✅ Complete the tasks below each day.<br>
-      🔘 Once all are checked, press <strong>"Mark Today as Complete"</strong>.<br>
-      🌟 Keep your streak going to unlock special badges!
+  <div class="container">
+    <!-- Checklist -->
+    <div class="tasks">
+      <h2>Daily Tasks</h2>
+      <ul>
+        <li><input type="checkbox" id="task1"> Apply sunscreen</li>
+        <li><input type="checkbox" id="task2"> Wear a hat</li>
+        <li><input type="checkbox" id="task3"> Stay in the shade</li>
+        <li><input type="checkbox" id="task4"> Wear sun-protective clothing</li>
+        <li><input type="checkbox" id="task5"> Wear sunglasses</li>
+      </ul>
     </div>
-    <ul id="task-list">
-      <li><label><input type="checkbox" class="task"> Apply sunscreen</label></li>
-      <li><label><input type="checkbox" class="task"> Wear a hat</label></li>
-      <li><label><input type="checkbox" class="task"> Stay in the shade</label></li>
-      <li><label><input type="checkbox" class="task"> Wear sun protective clothing</label></li>
-      <li><label><input type="checkbox" class="task"> Wear sunglasses</label></li>
-    </ul>
-    <button onclick="markComplete()">Mark Today as Complete</button>
-    <div id="status"></div>
-  </div>
 
-  <div class="sidebar">
-    <h2>🎖️ Your Badges</h2>
-    <div class="badges" id="badges">
-      <div class="badge" id="badge5" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQXZQ">
-          <img src="https://iili.io/KJIQXZQ.md.png" alt="5 Day Badge">
-        </a>
-        <p>5 Days Streak!</p>
+    <!-- Tracker -->
+    <div class="tracker">
+      <h2>Habit Tracker</h2>
+      <p>Complete the tasks to the left, then press the button below to mark your day complete.<br>
+      Continue your streak to earn badges!</p>
+      <p>Current Streak: <span id="streak">0</span> days</p>
+      <button onclick="markComplete()">Mark Today as Complete</button>
+    </div>
+
+    <!-- Badge Preview -->
+    <div class="badges">
+      <h2>Your Badges</h2>
+      <div class="badge" id="badge5">
+        <a href="https://freeimage.host/i/KJIQXZQ"><img src="https://iili.io/KJIQXZQ.md.png" alt="5 Days Badge"></a>
       </div>
-      <div class="badge" id="badge10" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQjnV">
-          <img src="https://iili.io/KJIQjnV.md.png" alt="10 Day Badge">
-        </a>
-        <p>10 Days Streak!</p>
+      <div class="badge" id="badge10">
+        <a href="https://freeimage.host/i/KJIQjnV"><img src="https://iili.io/KJIQjnV.md.png" alt="10 Days Badge"></a>
       </div>
-      <div class="badge" id="badge15" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQN6P">
-          <img src="https://iili.io/KJIQN6P.md.png" alt="15 Day Badge">
-        </a>
-        <p>15 Days Streak!</p>
+      <div class="badge" id="badge15">
+        <a href="https://freeimage.host/i/KJIQN6P"><img src="https://iili.io/KJIQN6P.md.png" alt="15 Days Badge"></a>
       </div>
-      <div class="badge" id="badge20" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQwMB">
-          <img src="https://iili.io/KJIQwMB.md.png" alt="20 Day Badge">
-        </a>
-        <p>20 Days Streak!</p>
+      <div class="badge" id="badge20">
+        <a href="https://freeimage.host/i/KJIQwMB"><img src="https://iili.io/KJIQwMB.md.png" alt="20 Days Badge"></a>
       </div>
-      <div class="badge" id="badge25" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQeF1">
-          <img src="https://iili.io/KJIQeF1.md.png" alt="25 Day Badge">
-        </a>
-        <p>25 Days Streak!</p>
+      <div class="badge" id="badge25">
+        <a href="https://freeimage.host/i/KJIQeF1"><img src="https://iili.io/KJIQeF1.md.png" alt="25 Days Badge"></a>
       </div>
-      <div class="badge" id="badge30" style="display:none;">
-        <a href="https://freeimage.host/i/KJIQkcF">
-          <img src="https://iili.io/KJIQkcF.md.png" alt="30 Day Badge">
-        </a>
-        <p>30 Days Streak!</p>
+      <div class="badge" id="badge30">
+        <a href="https://freeimage.host/i/KJIQkcF"><img src="https://iili.io/KJIQkcF.md.png" alt="30 Days Badge"></a>
       </div>
     </div>
   </div>
 
   <script>
-    let streak = localStorage.getItem('streak') ? parseInt(localStorage.getItem('streak')) : 0;
+    let streak = 0;
+
+    function allTasksCompleted() {
+      for (let i = 1; i <= 5; i++) {
+        if (!document.getElementById("task" + i).checked) {
+          return false;
+        }
+      }
+      return true;
+    }
 
     function markComplete() {
-      let tasks = document.querySelectorAll('.task');
-      let allDone = true;
-      tasks.forEach(task => {
-        if (!task.checked) allDone = false;
-      });
-
-      if (!allDone) {
-        document.getElementById('status').innerText = "⚠️ Please complete all tasks before marking the day!";
+      if (!allTasksCompleted()) {
+        alert("Please complete all tasks before marking the day complete!");
         return;
       }
 
       streak++;
-      localStorage.setItem('streak', streak);
-      document.getElementById('status').innerText = "✅ Great job! Current streak: " + streak + " days.";
-      checkBadges();
+      document.getElementById("streak").innerText = streak;
 
-      // Reset checkboxes
-      tasks.forEach(task => task.checked = false);
+      if (streak === 5) document.getElementById("badge5").style.display = "block";
+      if (streak === 10) document.getElementById("badge10").style.display = "block";
+      if (streak === 15) document.getElementById("badge15").style.display = "block";
+      if (streak === 20) document.getElementById("badge20").style.display = "block";
+      if (streak === 25) document.getElementById("badge25").style.display = "block";
+      if (streak === 30) document.getElementById("badge30").style.display = "block";
+
+      // Reset checkboxes for the next day
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById("task" + i).checked = false;
+      }
     }
-
-    function checkBadges() {
-      if (streak >= 5) document.getElementById('badge5').style.display = 'block';
-      if (streak >= 10) document.getElementById('badge10').style.display = 'block';
-      if (streak >= 15) document.getElementById('badge15').style.display = 'block';
-      if (streak >= 20) document.getElementById('badge20').style.display = 'block';
-      if (streak >= 25) document.getElementById('badge25').style.display = 'block';
-      if (streak >= 30) document.getElementById('badge30').style.display = 'block';
-    }
-
-    window.onload = checkBadges;
   </script>
 </body>
 </html>
