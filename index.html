@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .status {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+    .badges {
+      margin-top: 20px;
+    }
+    .badge {
+      display: inline-block;
+      margin: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #ddd;
+    }
+    .badge img {
+      width: 80px;
+      height: 80px;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Habit Tracker</h1>
+  <div class="status">
+    <p id="streak">🔥 Current streak: 0 days</p>
+  </div>
+  <button id="completeBtn">Mark Today Complete ✅</button>
+  <div class="badges">
+    <h2>🏅 Badges Earned</h2>
+    <div id="badgeContainer"></div>
+  </div>
+
+  <script>
+    const BADGE_MILESTONES = [5, 10, 15, 20, 25, 30];
+    const BADGE_IMAGES = {
+      5: "https://iili.io/KJIQXZQ.md.png",
+      10: "https://iili.io/KJIQjnV.md.png",
+      15: "https://iili.io/KJIQN6P.md.png",
+      20: "https://iili.io/KJIQwMB.md.png",
+      25: "https://iili.io/KJIQeF1.md.png",
+      30: "https://iili.io/KJIQkcF.md.png"
+    };
+
+    const progress = JSON.parse(localStorage.getItem("habitProgress")) || {
+      streak: 0,
+      lastCompleted: null,
+      badges: []
+    };
+
+    const streakEl = document.getElementById("streak");
+    const badgeContainer = document.getElementById("badgeContainer");
+    const completeBtn = document.getElementById("completeBtn");
+
+    function updateUI() {
+      streakEl.textContent = `🔥 Current streak: ${progress.streak} days`;
+      badgeContainer.innerHTML = "";
+      if (progress.badges.length === 0) {
+        badgeContainer.innerHTML = "<p>No badges yet — keep going!</p>";
+      } else {
+        progress.badges.forEach(b => {
+          const div = document.createElement("div");
+          div.className = "badge";
+          div.innerHTML = `<a href="${BADGE_IMAGES[b]}" target="_blank"><img src="${BADGE_IMAGES[b]}" alt="${b}-day badge"></a><p>${b}-day</p>`;
+          badgeContainer.appendChild(div);
+        });
+      }
+    }
+
+    function markComplete() {
+      const today = new Date().toISOString().split("T")[0];
+      if (progress.lastCompleted === today) {
+        alert("✅ You already marked today complete!");
+        return;
+      }
+
+      if (progress.lastCompleted) {
+        const lastDate = new Date(progress.lastCompleted);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        if (lastDate.toDateString() === yesterday.toDateString()) {
+          progress.streak += 1;
+        } else {
+          progress.streak = 1; // reset
+        }
+      } else {
+        progress.streak = 1;
+      }
+
+      progress.lastCompleted = today;
+
+      // Badge unlock
+      if (BADGE_MILESTONES.includes(progress.streak) && !progress.badges.includes(progress.streak)) {
+        progress.badges.push(progress.streak);
+        alert(`🎉 Congrats! You earned the ${progress.streak}-day badge!`);
+      }
+
+      localStorage.setItem("habitProgress", JSON.stringify(progress));
+      updateUI();
+    }
+
+    completeBtn.addEventListener("click", markComplete);
+    updateUI();
+  </script>
+</body>
+</html>
